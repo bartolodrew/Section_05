@@ -53,6 +53,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint32 bUsingMotionControllers : 1;
 
-	UFUNCTION(BlueprintCallable, Category = "Firing")
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	void OnFire();
 };
