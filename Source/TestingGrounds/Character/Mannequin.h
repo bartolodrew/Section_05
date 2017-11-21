@@ -27,21 +27,21 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-		TSubclassOf<class AGun> GunBlueprint;
+	TSubclassOf<class AGun> GunBlueprint;
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-		void Fire();
+	void PullTrigger();
 
 private:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USkeletalMeshComponent* Mesh1P;
+	class USkeletalMeshComponent* Mesh1P;
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FirstPersonCameraComponent;
+	class UCameraComponent* FirstPersonCameraComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		AGun* Gun;
+	AGun* Gun;
 
 };
