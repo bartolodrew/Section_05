@@ -50,13 +50,14 @@ bool ATile::CastSphere(FVector Location, float Radius)
 		Location,
 		Location,
 		FQuat::Identity,
-		ECollisionChannel::ECC_Camera,
+		ECollisionChannel::ECC_GameTraceChannel2,
 		FCollisionShape::MakeSphere(Radius)
 	);
 
 	FColor ResultColor = HasHit ? FColor::Red : FColor::Green;
 
-	DrawDebugSphere(
+	DrawDebugCapsule(GetWorld(), Location, 0, Radius, FQuat::Identity, ResultColor, true, 100);
+	/*DrawDebugSphere(
 		GetWorld(),
 		Location,
 		Radius,
@@ -64,7 +65,7 @@ bool ATile::CastSphere(FVector Location, float Radius)
 		ResultColor,
 		true,
 		100
-	);
+	);*/
 	return HasHit;
 }
 
