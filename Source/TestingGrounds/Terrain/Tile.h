@@ -26,6 +26,12 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
+	UPROPERTY(EditDefaultsOnly, Category="Spawning")
+	FVector MaxExtent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+	FVector MinExtent;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
