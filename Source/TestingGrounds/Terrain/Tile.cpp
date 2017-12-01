@@ -41,24 +41,24 @@ void ATile::PositionNavMeshBoundsVolume()
 }
 
 // Create struct for MinSpawn to MaxScale, and declare UPROPERTY for each to be editable or viewable in blueprint
-void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn, float Radius, float MinScale, float MaxScale) 
+void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, const FSpawnPositionProperties& Properties)
 {
-	TArray<FSpawnPosition> SpawnPositions = RandomSpawnPositions(MinSpawn, MaxSpawn, Radius, MinScale, MaxScale);
+	TArray<FSpawnPosition> SpawnPositions = RandomSpawnPositions(Properties);
 	for (FSpawnPosition SpawnPosition : SpawnPositions)
 	{
 		PlaceActor(ToSpawn, SpawnPosition);
 	}
 }
 
-TArray<FSpawnPosition> ATile::RandomSpawnPositions(int MinSpawn, int MaxSpawn, float Radius, float MinScale, float MaxScale)
+TArray<FSpawnPosition> ATile::RandomSpawnPositions(const FSpawnPositionProperties& Properties)
 {
 	TArray<FSpawnPosition> SpawnPositions;
-	int NumberToSpawn = FMath::RandRange(MinSpawn, MaxSpawn);
+	int NumberToSpawn = FMath::RandRange(Properties.MinSpawn, Properties.MaxSpawn);
 	for (size_t i = 0; i < NumberToSpawn; i++)
 	{
 		FSpawnPosition SpawnPosition;
-		SpawnPosition.Scale = FMath::RandRange(MinScale, MaxScale);
-		bool found = FindEmptyLocation(SpawnPosition.Location, Radius * SpawnPosition.Scale);
+		SpawnPosition.Scale = FMath::RandRange(Properties.MinScale, Properties.MaxScale);
+		bool found = FindEmptyLocation(SpawnPosition.Location, Properties.Radius * SpawnPosition.Scale);
 		if (found)
 		{
 			SpawnPosition.Rotation = FMath::RandRange(-180.f, 180.f);

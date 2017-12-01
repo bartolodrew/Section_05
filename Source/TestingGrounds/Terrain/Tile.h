@@ -16,6 +16,36 @@ struct FSpawnPosition
 	float Scale;
 };
 
+USTRUCT(BlueprintType)
+struct FSpawnPositionProperties
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spawning Props")
+	int MinSpawn; 
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spawning Props")
+	int MaxSpawn; 
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spawning Props")
+	float Radius; 
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spawning Props")
+	float MinScale; 
+	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Spawning Props")
+	float MaxScale;
+
+	FSpawnPositionProperties()
+	{
+		MinSpawn = 1;
+		MaxSpawn = 1;
+		MinScale = 1;
+		MaxScale = 1;
+		Radius = 500;
+	}
+};
+
 class UActorPool;
 
 UCLASS()
@@ -28,7 +58,7 @@ public:
 	ATile();
 
 	UFUNCTION(BlueprintCallable, Category = "Weapon")
-	void PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn, float Radius = 500, float MinScale = 1, float MaxScale = 1);
+	void PlaceActors(TSubclassOf<AActor> ToSpawn, const FSpawnPositionProperties& Properties);
 
 protected:
 	// Called when the game starts or when spawned
@@ -55,7 +85,7 @@ public:
 private:
 	void PositionNavMeshBoundsVolume();
 
-	TArray<FSpawnPosition> RandomSpawnPositions(int MinSpawn, int MaxSpawn, float Radius = 500, float MinScale = 1, float MaxScale = 1);
+	TArray<FSpawnPosition> RandomSpawnPositions(const FSpawnPositionProperties& Properties);
 
 	bool FindEmptyLocation(FVector& OutLocation, float Radius);
 
