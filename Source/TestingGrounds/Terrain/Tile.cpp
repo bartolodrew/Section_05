@@ -108,6 +108,7 @@ void ATile::PlaceAIPawn(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition
 	if (Spawned == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("[%s] Failed to spawn AIPawn"), *GetName());
+		return;
 	}
 	else
 	{
