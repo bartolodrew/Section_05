@@ -88,13 +88,14 @@ public:
 private:
 	void PositionNavMeshBoundsVolume();
 
-	TArray<FSpawnPosition> RandomSpawnPositions(const FSpawnPositionProperties& Properties);
-
 	bool FindEmptyLocation(FVector& OutLocation, float Radius);
+	
+	template<class T>
+	void RandomlyPlaceActors(TSubclassOf<T> ToSpawn, const FSpawnPositionProperties& Properties);
 
 	void PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnPosition);
 
-	void PlaceAIPawn(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition);
+	void PlaceActor(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition);
 
 	bool CanSpawnAtLocation(FVector Location, float Radius);
 

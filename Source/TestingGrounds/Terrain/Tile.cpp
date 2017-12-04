@@ -40,28 +40,9 @@ void ATile::PositionNavMeshBoundsVolume()
 	GetWorld()->GetNavigationSystem()->Build();
 }
 
-// Create struct for MinSpawn to MaxScale, and declare UPROPERTY for each to be editable or viewable in blueprint
-void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, const FSpawnPositionProperties& Properties)
+template<class T>
+void ATile::RandomlyPlaceActors(TSubclassOf<T> ToSpawn, const FSpawnPositionProperties& Properties)
 {
-	TArray<FSpawnPosition> SpawnPositions = RandomSpawnPositions(Properties);
-	for (FSpawnPosition SpawnPosition : SpawnPositions)
-	{
-		PlaceActor(ToSpawn, SpawnPosition);
-	}
-}
-
-void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, const FSpawnPositionProperties & Properties)
-{
-	TArray<FSpawnPosition> SpawnPositions = RandomSpawnPositions(Properties);
-	for (FSpawnPosition SpawnPosition : SpawnPositions)
-	{
-		PlaceAIPawn(ToSpawn, SpawnPosition);
-	}
-}
-
-TArray<FSpawnPosition> ATile::RandomSpawnPositions(const FSpawnPositionProperties& Properties)
-{
-	TArray<FSpawnPosition> SpawnPositions;
 	int NumberToSpawn = FMath::RandRange(Properties.MinSpawn, Properties.MaxSpawn);
 	for (size_t i = 0; i < NumberToSpawn; i++)
 	{
@@ -71,10 +52,20 @@ TArray<FSpawnPosition> ATile::RandomSpawnPositions(const FSpawnPositionPropertie
 		if (found)
 		{
 			SpawnPosition.Rotation = FMath::RandRange(-180.f, 180.f);
-			SpawnPositions.Add(SpawnPosition);
+			PlaceActor(ToSpawn, SpawnPosition);
 		}
 	}
-	return SpawnPositions;
+}
+
+// Create struct for MinSpawn to MaxScale, and declare UPROPERTY for each to be editable or viewable in blueprint
+void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, const FSpawnPositionProperties& Properties)
+{
+	RandomlyPlaceActors(ToSpawn, Properties);
+}
+
+void ATile::PlaceAIPawns(TSubclassOf<APawn> ToSpawn, const FSpawnPositionProperties& Properties)
+{
+	RandomlyPlaceActors(ToSpawn, Properties);
 }
 
 bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
@@ -96,13 +87,21 @@ bool ATile::FindEmptyLocation(FVector& OutLocation, float Radius)
 void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, const FSpawnPosition& SpawnPosition)
 {
 	AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
-	Spawned->SetActorRelativeLocation(SpawnPosition.Location);
-	Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-	Spawned->SetActorRotation(FRotator(0, SpawnPosition.Rotation, 0));
-	Spawned->SetActorScale3D(FVector(SpawnPosition.Scale));
+	if (Spawned == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[%s] Failed to spawn Actor"), *GetName());
+		return;
+	}
+	else
+	{
+		Spawned->SetActorRelativeLocation(SpawnPosition.Location);
+		Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+		Spawned->SetActorRotation(FRotator(0, SpawnPosition.Rotation, 0));
+		Spawned->SetActorScale3D(FVector(SpawnPosition.Scale));
+	}
 }
 
-void ATile::PlaceAIPawn(TSubclassOf<APawn> ToSpawn, FSpawnPosition SpawnPosition)
+void ATile::PlaceActor(TSubclassOf<APawn> ToSpawn, const FSpawnPosition& SpawnPosition)
 {
 	APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
 	if (Spawned == nullptr)
